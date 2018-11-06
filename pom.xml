@@ -34,8 +34,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
         <!-- database config (local) -->
         <jdbc.driver>org.hsqldb.jdbc.JDBCDriver</jdbc.driver>
         <jdbc.url>jdbc:hsqldb:file:${basedir}/target/data/sampledb;shutdown=true</jdbc.url>
@@ -55,7 +55,7 @@
                     <dependency>
                         <groupId>org.hsqldb</groupId>
                         <artifactId>hsqldb</artifactId>
-                        <version>2.4.0</version>
+                        <version>2.3.2</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -78,6 +78,21 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- run jetty to test
+            https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html
+            -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.7.v20170914</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webApp>
+                        <contextPath>/test</contextPath>
+                        <descriptor>${project.basedir}/src/test/resources/web.xml</descriptor>
+                    </webApp>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -87,6 +102,13 @@
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
             <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
