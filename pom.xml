@@ -8,6 +8,79 @@
     <artifactId>sqlcrud</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>SQL CRUD servlet app</name>
+    <description>CRUD actions and view for java-servlet apps</description>
+    <url>https://github.com/jdlopez/sqlcrud</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>JD lopez</name>
+            <url>https://github.com/jdlopez</url>
+            <organization>MySelf</organization>
+            <organizationUrl>https://github.com/jdlopez</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/jdlopez/sqlcrud.git</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- database config (local) -->
+        <jdbc.driver>org.hsqldb.jdbc.JDBCDriver</jdbc.driver>
+        <jdbc.url>jdbc:hsqldb:file:${basedir}/target/data/sampledb;shutdown=true</jdbc.url>
+        <jdbc.user>SA</jdbc.user>
+        <jdbc.password>a</jdbc.password>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- create test database -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <!-- specify the dependent JDBC driver here -->
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.4.0</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>${jdbc.driver}</driver>
+                    <url>${jdbc.url}</url>
+                    <username>${jdbc.user}</username>
+                    <password>${jdbc.password}</password>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <srcFiles>
+                                <srcFile>${basedir}/src/test/resources/createdb.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
 
         <dependency>
