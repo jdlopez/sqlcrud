@@ -10,7 +10,11 @@
 
     <servlet-mapping>
         <servlet-name>ResourceServlet</servlet-name>
-        <url-pattern>/admin/crud</url-pattern>
+        <url-pattern>/admin</url-pattern>
     </servlet-mapping>
+    
+    <listener>
+        <listener-class>es.jdl.sqlcrud.services.CRUDConfigContextListener</listener-class>
+    </listener>
 
 </web-app>
