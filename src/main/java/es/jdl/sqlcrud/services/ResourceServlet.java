@@ -32,8 +32,11 @@ public class ResourceServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 1st replace base uri with baseResources then look for resource file
-        String resource = req.getPathInfo().replaceAll(uriMapping, baseResources);
+        String pathInfo = req.getPathInfo();
+        if (pathInfo == null || "".equals(pathInfo) || "/".equals(pathInfo) ) {
+            pathInfo = "index.html"; // aka welcome-page: TODO add configuration
+        }
+        String resource = baseResources + pathInfo;
         InputStream inputStream = this.getClass().getResourceAsStream(resource);
         inputStream.transferTo(resp.getOutputStream());
         resp.getOutputStream().flush();

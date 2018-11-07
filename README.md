@@ -42,6 +42,12 @@ Services, REST. All refered to 'base URI':
 - GET /base/def/all get available tables
 - GET /base/crud displays html frontend
 
+###Json parser
+
+1st trying JSR 374: [jee jsonp](https://javaee.github.io/jsonp/) -> no read javabean or write
+
+Actually it uses Gson. Is lighter than Jackson
+
 ##frontend
 
 bootstrap+jquery+datatables all in CDN

@@ -37,4 +37,9 @@ public class CRUDConfigContextListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
     }
+
+    /** Factory accesor to config object */
+    public static CRUDConfiguration getConfig(ServletContext ctx) {
+        return (CRUDConfiguration) ctx.getAttribute(CRUDDATABASE_JSON);
+    }
 }

@@ -64,9 +64,10 @@
                     <username>${jdbc.user}</username>
                     <password>${jdbc.password}</password>
                 </configuration>
+                <!--
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <phase>generate-test-resources</phase>
                         <goals>
                             <goal>execute</goal>
                         </goals>
@@ -77,6 +78,7 @@
                         </configuration>
                     </execution>
                 </executions>
+                -->
             </plugin>
         </plugins>
     </build>
@@ -84,9 +86,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
         </dependency>
 
         <dependency>
@@ -102,14 +104,6 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1</version>
-            <scope>test</scope>
-        </dependency>
-
 
     </dependencies>
 

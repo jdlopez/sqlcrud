@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+
+    <New id="mydatasource" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>jdbc/mydatasource</Arg>
+        <Arg>
+            <New class="org.hsqldb.jdbc.JDBCDataSource">
+                <!-- driver no necesario, ya usa hsqldb -->
+                <Set name="url">jdbc:hsqldb:file:target/data/sampledb</Set>
+                <Set name="user">SA</Set>
+                <Set name="password">a</Set>
+            </New>
+        </Arg>
+    </New>
+
+</Configure>

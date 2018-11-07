@@ -7,10 +7,20 @@
         <servlet-name>ResourceServlet</servlet-name>
         <servlet-class>es.jdl.sqlcrud.services.ResourceServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>AllTablesDefServlet</servlet-name>
+        <servlet-class>es.jdl.sqlcrud.services.AllTablesDefServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ResourceServlet</servlet-name>
-        <url-pattern>/admin</url-pattern>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AllTablesDefServlet</servlet-name>
+        <url-pattern>/admin/def/all</url-pattern>
     </servlet-mapping>
     
     <listener>
