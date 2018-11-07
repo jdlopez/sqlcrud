@@ -1,5 +1,7 @@
 package es.jdl.sqlcrud.domain.config;
 
+import es.jdl.sqlcrud.domain.def.TableDef;
+
 import java.util.List;
 
 /**

@@ -1,6 +1,7 @@
 package es.jdl.sqlcrud.services;
 
-import es.jdl.sqlcrud.domain.config.TableDef;
+import es.jdl.sqlcrud.domain.def.ColumnDef;
+import es.jdl.sqlcrud.domain.def.TableDef;
 import es.jdl.sqlcrud.exceptions.DatabaseException;
 
 import javax.naming.InitialContext;
@@ -29,27 +30,18 @@ public class DbService {
         try {
             InitialContext ic = new InitialContext();
             dataSource = (DataSource) ic.lookup(dataSourceName);
-            conn = dataSource.getConnection();
-            allTables = findAllTables(conn);
+            allTables = findAllTables(); // TODO this must be application scope!
         } catch (NamingException e) {
             throw new DatabaseException("Getting JNDI: " + dataSourceName + ". " + e.getMessage(), e);
-        } catch (SQLException e) {
-            throw new DatabaseException("Getting tables using: " + dataSource + ". " + e.getMessage(), e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new DatabaseException("Closing db connection: " + conn + ". " + e.getMessage(), e);
-                }
-            } // conn <> null
         } // end try
     }
 
-    public List<TableDef> findAllTables(Connection conn) throws DatabaseException {
-        DatabaseMetaData md = null;
+    public List<TableDef> findAllTables() throws DatabaseException {
         List<TableDef> ret =  new LinkedList<>();
+        DatabaseMetaData md = null;
+        Connection conn = null;
         try {
+            conn = dataSource.getConnection();
             md = conn.getMetaData();
             ResultSet rs = md.getCatalogs();
             while (rs.next()) {
@@ -66,8 +58,54 @@ public class DbService {
 
         } catch (SQLException e) {
             throw new DatabaseException("Getting tables from metadata: " + md + ". " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new DatabaseException("Closing db connection: " + conn + ". " + e.getMessage(), e);
+                }
+            } // conn <> null
         }
         return ret;
     }
 
+    public List<ColumnDef> findColumns(String tableName) throws DatabaseException {
+        LinkedList<ColumnDef> columns = new LinkedList<>();
+        DatabaseMetaData md = null;
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            md = conn.getMetaData();
+            ResultSet rsCols = md.getColumns(null, null, tableName, null);
+            while (rsCols.next()) {
+                ColumnDef column = new ColumnDef(rsCols);
+                columns.add(column);
+            } // end while
+            rsCols.close();
+            ResultSet rsKeys = md.getPrimaryKeys(null, null, tableName);
+            while (rsKeys.next()) {
+                for (ColumnDef c: columns)
+                    if (c.getName().equalsIgnoreCase(rsKeys.getString("COLUMN_NAME")))
+                        c.setPrimaryKey(true);
+
+            } // end while
+            rsKeys.close();
+        } catch (SQLException e) {
+            throw new DatabaseException("Getting tables from metadata: " + md + ". " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new DatabaseException("Closing db connection: " + conn + ". " + e.getMessage(), e);
+                }
+            } // conn <> null
+        }
+        return columns;
+    }
+
+    public List<TableDef> getAllTables() {
+        return allTables;
+    }
 }

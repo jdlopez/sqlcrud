@@ -1,4 +1,6 @@
-package es.jdl.sqlcrud.domain.config;
+package es.jdl.sqlcrud.domain.def;
+
+import es.jdl.sqlcrud.domain.config.CRUDPermission;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

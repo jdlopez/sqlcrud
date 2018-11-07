@@ -1,15 +1,15 @@
 # SQL CRUD
 
-Very simple CRUD application
+Very simple CRUD application. Servlet based, jar packaged. Could be embedded in larger applications
 
 * C Create
 * R Read
 * U Update
 * D Delete
 
-[CRUD wikipedia](/https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+[CRUD wikipedia](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 
-##Config
+## Config
 
 web.xml o java equivalent
 
@@ -26,29 +26,30 @@ Example json:
     {
     }
     
-##Arch
+## Arch
 
 servlet + html5/js
 
 Services, REST. All refered to 'base URI':
 
-- POST /base/c/table with json data
-- GET  /base/r/table/id
-- POST /base/u/table with json data
-- DELETE /base/d/table/id
+- [x] GET /base/ displays html frontend
+- [x] GET /base/def/all get available tables
+- [ ] GET /base/def/table get json with table definition
 
-- GET /base/l/table list all data, using body json as filter
-- GET /base/def/table get json with table definition
-- GET /base/def/all get available tables
-- GET /base/crud displays html frontend
 
-###Json parser
+- [ ] GET /base/l/table list all data, using body json as filter
+- [ ] POST /base/c/table with json data
+- [ ] GET  /base/r/table/id
+- [ ] POST /base/u/table with json data
+- [ ] DELETE /base/d/table/id
+
+### Json parser
 
 1st trying JSR 374: [jee jsonp](https://javaee.github.io/jsonp/) -> no read javabean or write
 
 Actually it uses Gson. Is lighter than Jackson
 
-##frontend
+## frontend
 
 bootstrap+jquery+datatables all in CDN
 

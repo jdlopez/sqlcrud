@@ -13,6 +13,11 @@
         <servlet-class>es.jdl.sqlcrud.services.AllTablesDefServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>TableColumnsDefServlet</servlet-name>
+        <servlet-class>es.jdl.sqlcrud.services.TableColumnsDefServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>ResourceServlet</servlet-name>
         <url-pattern>/admin/*</url-pattern>
@@ -21,6 +26,11 @@
     <servlet-mapping>
         <servlet-name>AllTablesDefServlet</servlet-name>
         <url-pattern>/admin/def/all</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TableColumnsDefServlet</servlet-name>
+        <url-pattern>/admin/def/*</url-pattern>
     </servlet-mapping>
     
     <listener>
