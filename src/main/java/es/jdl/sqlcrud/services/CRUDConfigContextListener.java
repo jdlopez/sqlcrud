@@ -14,8 +14,6 @@ import javax.servlet.ServletContextListener;
  */
 public class CRUDConfigContextListener implements ServletContextListener {
 
-    public static final String CRUDDATABASE_JSON = "cruddatabase.json";
-
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext ctx = sce.getServletContext();
@@ -25,9 +23,9 @@ public class CRUDConfigContextListener implements ServletContextListener {
 
             conf = confBuilder.readConfig(
                     ResourcesUtil.getResourceAsStream(
-                            ResourcesUtil.getConfigValue(CRUDDATABASE_JSON, CRUDDATABASE_JSON, ctx),
+                            ResourcesUtil.getConfigValue(ConfigHelper.CRUDDATABASE_JSON, ConfigHelper.CRUDDATABASE_JSON, ctx),
                             ctx));
-            ctx.setAttribute(CRUDDATABASE_JSON, conf);
+            ctx.setAttribute(ConfigHelper.CRUDDATABASE_JSON, conf);
         } catch (ConfigurationException e) {
             ctx.log(e.getMessage(), e);
         }
@@ -38,8 +36,4 @@ public class CRUDConfigContextListener implements ServletContextListener {
 
     }
 
-    /** Factory accesor to config object */
-    public static CRUDConfiguration getConfig(ServletContext ctx) {
-        return (CRUDConfiguration) ctx.getAttribute(CRUDDATABASE_JSON);
-    }
 }

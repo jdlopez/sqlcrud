@@ -34,14 +34,15 @@ Services, REST. All refered to 'base URI':
 
 - [x] GET /base/ displays html frontend
 - [x] GET /base/def/all get available tables
-- [ ] GET /base/def/table get json with table definition
-
+- [x] GET /base/def/table get json with table definition
 
 - [ ] GET /base/l/table list all data, using body json as filter
 - [ ] POST /base/c/table with json data
 - [ ] GET  /base/r/table/id
 - [ ] POST /base/u/table with json data
 - [ ] DELETE /base/d/table/id
+
+- [ ] add some cache for definitions
 
 ### Json parser
 
