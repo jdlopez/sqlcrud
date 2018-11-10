@@ -29,4 +29,60 @@ public class TableDef {
         this.schema  = rs.getString("TABLE_SCHEM");
         this.type    = rs.getString("TABLE_TYPE");
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public CRUDPermission getPermission() {
+        return permission;
+    }
+
+    public void setPermission(CRUDPermission permission) {
+        this.permission = permission;
+    }
+
+    public List<ColumnDef> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<ColumnDef> columns) {
+        this.columns = columns;
+    }
 }

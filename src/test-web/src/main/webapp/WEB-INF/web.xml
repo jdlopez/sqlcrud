@@ -10,17 +10,22 @@
     
     <servlet>
         <servlet-name>AllTablesDefServlet</servlet-name>
-        <servlet-class>es.jdl.sqlcrud.services.AllTablesDefServlet</servlet-class>
+        <servlet-class>es.jdl.sqlcrud.services.rest.AllTablesDefServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>TableColumnsDefServlet</servlet-name>
-        <servlet-class>es.jdl.sqlcrud.services.TableColumnsDefServlet</servlet-class>
+        <servlet-class>es.jdl.sqlcrud.services.rest.TableColumnsDefServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>ListDataServlet</servlet-name>
-        <servlet-class>es.jdl.sqlcrud.services.ListDataServlet</servlet-class>
+        <servlet-class>es.jdl.sqlcrud.services.rest.ListDataServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReadDataServlet</servlet-name>
+        <servlet-class>es.jdl.sqlcrud.services.rest.ReadDataServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -41,6 +46,11 @@
     <servlet-mapping>
         <servlet-name>ListDataServlet</servlet-name>
         <url-pattern>/admin/l/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ReadDataServlet</servlet-name>
+        <url-pattern>/admin/r/*</url-pattern>
     </servlet-mapping>
     
     <listener>

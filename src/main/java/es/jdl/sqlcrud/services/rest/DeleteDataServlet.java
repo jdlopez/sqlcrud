@@ -1,4 +1,4 @@
-package es.jdl.sqlcrud.services;
+package es.jdl.sqlcrud.services.rest;
 
 public class DeleteDataServlet extends CRUDServiceServlet {
 }

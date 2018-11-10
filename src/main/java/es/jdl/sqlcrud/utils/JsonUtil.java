@@ -1,5 +1,9 @@
 package es.jdl.sqlcrud.utils;
 
+import com.google.gson.Gson;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -9,6 +13,8 @@ import java.util.Map;
  * @author jdlopez
  */
 public class JsonUtil {
+
+    private static Gson gson = new Gson();
 
     /**
      * Fill Bean Data from HashMap using Reflection
@@ -35,4 +41,10 @@ public class JsonUtil {
         return (T) obj;
     }
 
+    /** Serializes objet to writer */
+    public static void respondWithObject(HttpServletResponse resp, Object o) throws IOException {
+        resp.setContentType("application/json");
+        // if object is null then 404
+        resp.getWriter().print(gson.toJson(o));
+    }
 }

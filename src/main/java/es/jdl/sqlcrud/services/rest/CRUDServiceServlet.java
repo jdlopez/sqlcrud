@@ -1,7 +1,8 @@
-package es.jdl.sqlcrud.services;
+package es.jdl.sqlcrud.services.rest;
 
-import com.google.gson.Gson;
 import es.jdl.sqlcrud.domain.config.CRUDConfiguration;
+import es.jdl.sqlcrud.services.ConfigHelper;
+import es.jdl.sqlcrud.services.DbService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,11 +11,10 @@ import javax.servlet.http.HttpServlet;
 public class CRUDServiceServlet extends HttpServlet {
     protected CRUDConfiguration config;
     protected DbService dbService;
-    protected Gson gson = new Gson();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         this.config = ConfigHelper.getConfig(config.getServletContext());
-        this.dbService = ConfigHelper.getDbService(config.getServletContext());
+        this.dbService = DbService.getInstance(config.getServletContext());
     }
 }
