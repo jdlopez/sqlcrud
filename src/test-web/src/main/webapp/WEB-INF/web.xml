@@ -6,6 +6,12 @@
     <servlet>
         <servlet-name>ResourceServlet</servlet-name>
         <servlet-class>es.jdl.sqlcrud.services.ResourceServlet</servlet-class>
+        <!-- FIXME cabmiar resourceAsStream para q pueda leer resources fuera del jar
+        <init-param>
+            <param-name>baseResources</param-name>
+            <param-value>/templatesTest</param-value>
+        </init-param>
+        -->
     </servlet>
     
     <servlet>

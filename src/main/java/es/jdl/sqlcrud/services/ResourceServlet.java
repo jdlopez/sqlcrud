@@ -22,12 +22,15 @@ public class ResourceServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         Collection<String> maps = config.getServletContext().getServletRegistration(config.getServletName()).getMappings();
-        if (maps != null && !maps.isEmpty()) // just 1st mapping!!
+        if (maps != null && !maps.isEmpty()) { // just 1st mapping!!
             uriMapping = maps.iterator().next();
+            // it must end with /*
+            uriMapping = uriMapping.substring(0, uriMapping.lastIndexOf("/*"));
+        }
         // else error?
         this.baseResources = config.getInitParameter("baseResources");
         if (this.baseResources == null)
-            this.baseResources = "/templates";
+            this.baseResources = "/sqlcrudtemplates";
     }
 
     @Override
