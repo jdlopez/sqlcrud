@@ -39,7 +39,9 @@
                 <filtering>true</filtering>
                 <targetPath>${project.build.directory}/${project.build.finalName}/WEB-INF</targetPath>
             </resource>
-
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
         </resources>
         <plugins>
             <!-- create test database -->
@@ -61,7 +63,7 @@
                     <username>${jdbc.user}</username>
                     <password>${jdbc.password}</password>
                     <srcFiles>
-                        <srcFile>${basedir}/../test/resources/createdb.sql</srcFile>
+                        <srcFile>${basedir}/../src/test/resources/createdb.sql</srcFile>
                     </srcFiles>
                 </configuration>
             </plugin>

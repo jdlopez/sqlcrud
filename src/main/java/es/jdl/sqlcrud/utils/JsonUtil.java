@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
- *
+ * Utilities for JSON processing. Uses Gson
  * @author jdlopez
  */
 public class JsonUtil {

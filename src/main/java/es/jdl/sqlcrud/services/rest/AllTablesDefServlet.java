@@ -7,13 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Returns JSON with all configured tables. If none it returns all db tables
+ */
 public class AllTablesDefServlet extends CRUDServiceServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 1. get config
-        // 2. check permission
-        // 3. get data
-        JsonUtil.respondWithObject(resp, dbService.getAllTables());
+        JsonUtil.respondWithObject(resp, config.getTables());
     }
 }

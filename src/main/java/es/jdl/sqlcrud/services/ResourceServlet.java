@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 
 /**
@@ -39,10 +41,18 @@ public class ResourceServlet extends HttpServlet {
         if (pathInfo == null || "".equals(pathInfo) || "/".equals(pathInfo) ) {
             pathInfo = "index.html"; // aka welcome-page: TODO add configuration
         }
-        String resource = baseResources + pathInfo;
-        InputStream inputStream = this.getClass().getResourceAsStream(resource);
-        inputStream.transferTo(resp.getOutputStream());
-        resp.getOutputStream().flush();
-        inputStream.close();
+        String resource = baseResources + (baseResources.endsWith("/")?"":"/") + pathInfo;
+        log("Getting resource: " + resource);
+        try {
+            // todo: use ResourcesUtil??
+            URL resourceURL = this.getClass().getResource(resource).toURI().toURL();
+            log("URL calculated: " + resourceURL);
+            InputStream inputStream = resourceURL.openStream();
+            inputStream.transferTo(resp.getOutputStream());
+            resp.getOutputStream().flush();
+            inputStream.close();
+        } catch (URISyntaxException e) {
+            throw new ServletException("Opening " + resource + ". " + e.getMessage(), e);
+        }
     }
 }

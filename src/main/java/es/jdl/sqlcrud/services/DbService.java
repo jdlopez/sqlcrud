@@ -41,10 +41,11 @@ public class DbService {
     protected Map<String, TableDef> allTables;
     protected List<String> catalogs = new LinkedList<>();
     // TODO make configurable
-    private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat df = null;
 
-    public DbService(String dataSourceName) throws DatabaseException {
+    public DbService(String dataSourceName, String dateFormatPattern) throws DatabaseException {
         Connection conn = null;
+        this.df = new SimpleDateFormat(dateFormatPattern);
         try {
             InitialContext ic = new InitialContext();
             dataSource = (DataSource) ic.lookup(dataSourceName);
@@ -64,7 +65,7 @@ public class DbService {
             CRUDConfiguration cfg = ConfigHelper.getConfig(ctx);
             synchronized (cfg) {
                 try {
-                    dbService = new DbService(cfg.getDataSourceName());
+                    dbService = new DbService(cfg.getDataSourceName(), cfg.getDateFormatPattern());
                     ctx.setAttribute(DB_SERVICE, dbService);
                 } catch (DatabaseException e) {
                     ctx.log(e.getMessage(), e);
@@ -201,7 +202,7 @@ public class DbService {
             for (ColumnDef c: table.getColumns()) {
                 if (!c.isPrimaryKey()) { // PK auto-generated only? maybe another attribute
                     sql.append(c.getName()).append(",");
-                    ps.setObject(commaCount, data.get(c.getName()));
+                    ps.setObject(commaCount, convertFromString(data.get(c.getName()), c));
                     commaCount++;
                 }
             }
@@ -223,22 +224,6 @@ public class DbService {
                 }
             } // conn <> null
         }
-        return ret;
-    }
-
-    private Map<String, Object> resultSetToMap(ResultSet rs, String[] columnNames) throws SQLException {
-        HashMap<String, Object> row = new HashMap<>();
-        for (String c: columnNames)
-            row.put(c, rs.getObject(c));
-        return row;
-    }
-
-    /** */
-    private String[] readColumnNames(ResultSet rs) throws SQLException {
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] ret = new String[rsmd.getColumnCount()];
-        for (int i = 1; i <= ret.length; i++)
-            ret[i - 1] = rsmd.getColumnName(i);
         return ret;
     }
 
@@ -279,6 +264,99 @@ public class DbService {
         return ret;
     }
 
+
+    public int updateRow(TableDef table, Map<String, String> data) throws DatabaseException {
+        Connection conn = null;
+        StringBuilder sql = new StringBuilder();
+        int ret = -1;
+        try {
+            sql.append( "update " + table.getName() + " set " );
+            ColumnDef keyCol = getColumnPK(table.getColumns());
+            int commaCount = 0;
+            for (ColumnDef c: table.getColumns()) {
+                if (!c.isPrimaryKey()) { // PK auto-generated only? maybe another attribute
+                    sql.append(c.getName()).append(" = ?,");
+                    commaCount++;
+                }
+            }
+            sql.deleteCharAt(sql.length()); // remove last ','
+            sql.append(" where ");
+            sql.append(keyCol.getName()).append(" = ?");
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql.toString());
+            for (ColumnDef c: table.getColumns()) {
+                if (!c.isPrimaryKey()) { // PK auto-generated only? maybe another attribute
+                    sql.append(c.getName()).append(",");
+                    ps.setObject(commaCount, convertFromString(data.get(c.getName()), c));
+                    commaCount++;
+                }
+            }
+            ps.setObject(table.getColumns().size(), data.get(keyCol.getName()));
+            ret = ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            throw new DatabaseException("Executing update: " + sql + ". " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new DatabaseException("Closing db connection: " + conn + ". " + e.getMessage(), e);
+                }
+            } // conn <> null
+        }
+        return ret;
+    }
+
+    public int deleteByPK(TableDef table, String primaryKeyValue) throws DatabaseException {
+        Connection conn = null;
+        int ret = -1;
+        ColumnDef keyCol = getColumnPK(table.getColumns());
+        String sql = "delete from " + table.getName() + " where " + keyCol.getName() + " = ?";
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setObject(1, convertFromString(primaryKeyValue, keyCol));
+            ret = ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            throw new DatabaseException("Executing delete: " + sql + ". " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new DatabaseException("Closing db connection: " + conn + ". " + e.getMessage(), e);
+                }
+            } // conn <> null
+        }
+        return ret;
+    }
+
+    public ColumnDef getColumnPK(List<ColumnDef> columns) {
+        for (ColumnDef c: columns)
+            if (c.isPrimaryKey())
+                return c;
+        // not found!!
+        return null;
+    }
+
+    private Map<String, Object> resultSetToMap(ResultSet rs, String[] columnNames) throws SQLException {
+        HashMap<String, Object> row = new HashMap<>();
+        for (String c: columnNames)
+            row.put(c, rs.getObject(c));
+        return row;
+    }
+
+    /** */
+    private String[] readColumnNames(ResultSet rs) throws SQLException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] ret = new String[rsmd.getColumnCount()];
+        for (int i = 1; i <= ret.length; i++)
+            ret[i - 1] = rsmd.getColumnName(i);
+        return ret;
+    }
+
     private Object convertFromString(String value, ColumnDef col) {
         switch (JDBCType.valueOf(col.getType())) {
             case VARCHAR:
@@ -302,13 +380,7 @@ public class DbService {
         return value;
     }
 
-    private ColumnDef getColumnPK(List<ColumnDef> columns) {
-        for (ColumnDef c: columns)
-            if (c.isPrimaryKey())
-                return c;
-        // not found!!
-        return null;
-    }
+    // getters and setters
 
     public Collection<TableDef> getAllTables() {
         return allTables.values();

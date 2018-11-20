@@ -13,6 +13,7 @@ public class CRUDConfiguration {
     private String dataSourceName;
     private List<TableDef> tables;
     private AutoDiscoveryConfig autoDiscovery;
+    private String dateFormatPattern = "dd/MM/yyyy";
 
     public String getDataSourceName() {
         return dataSourceName;
@@ -36,5 +37,13 @@ public class CRUDConfiguration {
 
     public void setAutoDiscovery(AutoDiscoveryConfig autoDiscovery) {
         this.autoDiscovery = autoDiscovery;
+    }
+
+    public String getDateFormatPattern() {
+        return dateFormatPattern;
+    }
+
+    public void setDateFormatPattern(String dateFormatPattern) {
+        this.dateFormatPattern = dateFormatPattern;
     }
 }
