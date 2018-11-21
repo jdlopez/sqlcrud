@@ -21,78 +21,45 @@
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
     </nav>
 
+    <div class="modal fade" id="modalRowDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Row detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
       <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
             <ul class="nav flex-column" id="tableList">
-              <!--
-              <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="home"></span>
-                  Dashboard <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file"></span>
-                  Orders
-                </a>
-              </li>
-              -->
             </ul>
-            <!-- to be deleted
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
-            </h6>
-            <ul class="nav flex-column mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Current month
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Last quarter
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Social engagement
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Year-end sale
-                </a>
-              </li>
-            </ul>
-            tb deleted -->
           </div>
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none;" id="alertBox">
+                <div id="alertMessage"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2" id="tableTitle"></h1>
-            <!-- no toolbar needed
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Share</button>
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button>
-            </div>
-            toolbar -->
           </div>
 
 
@@ -119,14 +86,13 @@
     <script>
         $( document ).ready(function() {
 
-
             var ul = $( "#tableList" );
             $.getJSON( "def/all", function( data ) {
                 console.log(data);
                 $.each(data, function(i, f) {
                     ul.append('<li class="nav-item"><a class="nav-link" href="#" onclick="loadTableData(\'' + f.name + '\')"><span data-feather="file"></span>' + f.name + '</a></li>')
                 });
-                //$('a').on('click', addContent);
+
                 // load icons
                 feather.replace()
             });
@@ -134,21 +100,66 @@
         });
 
         function loadTableData(tableName) {
-            $.getJSON( "def/" + tableName, function( data ) {
+            $.getJSON( "def/" + tableName, function( tableDef ) {
                 // sets title
-                $('#tableTitle').text(data.name);
+                $('#tableTitle').text(tableDef.name);
                 var columns = [];
-                for (var i in data.columns) {
-                    columns.push({data: data.columns[i].name, title: data.columns[i].name, defaultContent:''});
+                for (var i in tableDef.columns) {
+                    columns.push({data: tableDef.columns[i].name, title: tableDef.columns[i].name, defaultContent:''});
                 }
+                columns.push({targets: -1,data: null,defaultContent: "<button>Edit</button>"});
+                // <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Open modal for @mdo</button>
                 console.log(columns);
-                $('#dataTable').DataTable({
+                var datatableObj = $('#dataTable').DataTable({
                   "ajax":   "l/" + tableName,
                   "columns": columns,
                   "bDestroy": true
                 });
+
+                $('#dataTable tbody').on( 'click', 'button', function () {
+                    var data = datatableObj.row( $(this).parents('tr') ).data();
+                    showRowForm(tableDef, data);
+                } );
+
             });
         }
+
+        function showRowForm(tableDef, rowData) {
+            console.log(tableDef);
+            console.log(rowData);
+            var dialog = $('#modalRowDetail');
+            for (var i in tableDef.columns) {
+
+                $('#modalRowDetail form').append(
+                    '<div class="form-group"><label for="'+tableDef.columns[i].name+'" class="col-form-label">' +
+                    tableDef.columns[i].name +
+                    '</label><input type="text" class="form-control" id="'+tableDef.columns[i].name+'" value="'
+                    +rowData[tableDef.columns[i].name]+'"></div>');
+            }
+            
+            $('#saveBtn').on('click', function () {
+                var postData = getFormData($('#modalRowDetail form'));
+                $.post( "u/" + tableDef.name, postData)
+                    .done(function( postDoneData ) {
+                        $('#alertMessage').html('Updated row: ' + postDoneData);
+                        $('#alertBox').show();
+                    });
+            });
+
+            dialog.modal();
+        }
+
+        function getFormData($form){
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }
+
     </script>
   </body>
 </html>

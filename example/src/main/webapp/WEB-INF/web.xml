@@ -31,6 +31,11 @@
         <servlet-name>ReadDataServlet</servlet-name>
         <servlet-class>es.jdl.sqlcrud.services.rest.ReadDataServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>UpdateDataServlet</servlet-name>
+        <servlet-class>es.jdl.sqlcrud.services.rest.UpdateDataServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ResourceServlet</servlet-name>
@@ -55,6 +60,11 @@
     <servlet-mapping>
         <servlet-name>ReadDataServlet</servlet-name>
         <url-pattern>/admin/r/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>UpdateDataServlet</servlet-name>
+        <url-pattern>/admin/u/*</url-pattern>
     </servlet-mapping>
     
     <listener>
