@@ -3,7 +3,6 @@ package es.jdl.sqlcrud.services.rest;
 import es.jdl.sqlcrud.domain.DataListResponse;
 import es.jdl.sqlcrud.domain.SelectFilter;
 import es.jdl.sqlcrud.services.ConfigHelper;
-import es.jdl.sqlcrud.utils.JsonUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ public class ListDataServlet extends CRUDServiceServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String t = ConfigHelper.getTableFromURL(req);
-        JsonUtil.respondWithObject(resp,
+        respondWithObject(resp,
                 new DataListResponse(dbService.getTable(t), dbService.selectFromTable(t, new SelectFilter(req)))
         );
     }

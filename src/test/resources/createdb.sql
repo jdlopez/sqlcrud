@@ -10,5 +10,5 @@ CREATE TABLE THIRD_TABLE (somekey integer primary key, one_attribute varchar(20)
 
 CREATE TABLE FOURTH_TABLE (somekey integer primary key, one_attribute varchar(20) not null, snd_attrib date null);
 
-CREATE TABLE FIFTH_TABLE (somekey integer primary key, one_attribute varchar(20) not null, snd_attrib date null);
+CREATE TABLE FIFTH_TABLE (somekey integer primary key identity, one_attribute varchar(20) not null, snd_attrib date null);
 

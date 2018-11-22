@@ -3,7 +3,6 @@ package es.jdl.sqlcrud.services.rest;
 import es.jdl.sqlcrud.domain.def.TableDef;
 import es.jdl.sqlcrud.exceptions.NotFoundException;
 import es.jdl.sqlcrud.services.ConfigHelper;
-import es.jdl.sqlcrud.utils.JsonUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ public class TableColumnsDefServlet extends CRUDServiceServlet {
         } else if (table.getColumns() == null) {
             table.setColumns(dbService.findColumns(tableName));
         }
-        JsonUtil.respondWithObject(resp, table);
+        respondWithObject(resp, table);
 
     }
 }

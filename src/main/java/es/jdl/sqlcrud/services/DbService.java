@@ -190,18 +190,17 @@ public class DbService {
                     commaCount++;
                 }
             }
-            sql.deleteCharAt(sql.length()); // remove last ','
+            removeLastChar(sql);
             sql.append(") values (");
             for (int i = 0; i < commaCount; i++)
                 sql.append("?,");
-            sql.deleteCharAt(sql.length()); // remove last ','
+            removeLastChar(sql);
             sql.append(")");
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             commaCount = 1;
             for (ColumnDef c: table.getColumns()) {
                 if (!c.isPrimaryKey()) { // PK auto-generated only? maybe another attribute
-                    sql.append(c.getName()).append(",");
                     ps.setObject(commaCount, convertFromString(data.get(c.getName()), c));
                     commaCount++;
                 }
@@ -279,19 +278,20 @@ public class DbService {
                     commaCount++;
                 }
             }
-            sql.deleteCharAt(sql.length()); // remove last ','
+            removeLastChar(sql); // remove last ','
             sql.append(" where ");
             sql.append(keyCol.getName()).append(" = ?");
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql.toString());
+            commaCount = 1;
             for (ColumnDef c: table.getColumns()) {
                 if (!c.isPrimaryKey()) { // PK auto-generated only? maybe another attribute
-                    sql.append(c.getName()).append(",");
                     ps.setObject(commaCount, convertFromString(data.get(c.getName()), c));
                     commaCount++;
                 }
             }
-            ps.setObject(table.getColumns().size(), data.get(keyCol.getName()));
+            // key is the last one
+            ps.setObject(commaCount, data.get(keyCol.getName()));
             ret = ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -339,6 +339,10 @@ public class DbService {
                 return c;
         // not found!!
         return null;
+    }
+
+    private void removeLastChar(StringBuilder sb) {
+        sb.setLength(Math.max(sb.length() - 1, 0));
     }
 
     private Map<String, Object> resultSetToMap(ResultSet rs, String[] columnNames) throws SQLException {

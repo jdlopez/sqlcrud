@@ -2,7 +2,6 @@ package es.jdl.sqlcrud.services.rest;
 
 import es.jdl.sqlcrud.domain.def.TableDef;
 import es.jdl.sqlcrud.services.ConfigHelper;
-import es.jdl.sqlcrud.utils.JsonUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ public class UpdateDataServlet extends CRUDServiceServlet {
         }
         dbService.updateRow(table, row);
         // read again?
-        JsonUtil.respondWithObject(resp, row);
+        respondWithObject(resp, row);
 
     }
 }
