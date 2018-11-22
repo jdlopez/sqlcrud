@@ -11,7 +11,9 @@ public class ColumnDef {
     private int decimalDigits;
     private Boolean nullable;
     private String defaultValue;
+    private boolean autoIncrement;
     private boolean primaryKey;
+    private boolean generatedColumn;
 
     public ColumnDef() {}
 
@@ -24,6 +26,8 @@ public class ColumnDef {
         this.nullable = "YES".equalsIgnoreCase(rsCols.getString("IS_NULLABLE"));
         this.defaultValue = rsCols.getString("COLUMN_DEF");
         this.primaryKey = false;
+        this.autoIncrement = "YES".equalsIgnoreCase(rsCols.getString("IS_AUTOINCREMENT"));
+        this.generatedColumn = "YES".equalsIgnoreCase(rsCols.getString("IS_GENERATEDCOLUMN"));
     }
 
     public String getName() {
@@ -88,5 +92,21 @@ public class ColumnDef {
 
     public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
+    }
+
+    public boolean isAutoIncrement() {
+        return autoIncrement;
+    }
+
+    public void setAutoIncrement(boolean autoIncrement) {
+        this.autoIncrement = autoIncrement;
+    }
+
+    public boolean isGeneratedColumn() {
+        return generatedColumn;
+    }
+
+    public void setGeneratedColumn(boolean generatedColumn) {
+        this.generatedColumn = generatedColumn;
     }
 }

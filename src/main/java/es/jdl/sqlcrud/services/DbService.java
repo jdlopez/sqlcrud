@@ -185,7 +185,7 @@ public class DbService {
             sql.append( "insert into " + table.getName() + " (" );
             int commaCount = 0;
             for (ColumnDef c: table.getColumns()) {
-                if (!c.isPrimaryKey()) { // PK auto-generated only? maybe another attribute
+                if (!c.isAutoIncrement()) {
                     sql.append(c.getName()).append(",");
                     commaCount++;
                 }
@@ -200,7 +200,7 @@ public class DbService {
             PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             commaCount = 1;
             for (ColumnDef c: table.getColumns()) {
-                if (!c.isPrimaryKey()) { // PK auto-generated only? maybe another attribute
+                if (!c.isAutoIncrement()) { // PK auto-generated only? maybe another attribute
                     ps.setObject(commaCount, convertFromString(data.get(c.getName()), c));
                     commaCount++;
                 }

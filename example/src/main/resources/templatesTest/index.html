@@ -31,7 +31,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="crudForm">
+                    <form id="crudForm" class="needs-validation" novalidate>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -101,6 +101,8 @@
 
         });
 
+        var datatableObj;
+
         function loadTableData(tableName) {
             $.getJSON( "def/" + tableName, function( tableDef ) {
                 // sets title
@@ -111,7 +113,7 @@
                 }
                 columns.push({targets: -1,data: null,defaultContent: "<button>Edit</button>"});
                 console.log(columns);
-                var datatableObj = $('#dataTable').DataTable({
+                datatableObj = $('#dataTable').DataTable({
                   "ajax":   "l/" + tableName,
                   "columns": columns,
                   "bDestroy": true
@@ -133,25 +135,31 @@
 
         function showRowForm(tableDef, rowData, isNew) {
             var dialog = $('#modalRowDetail');
-
+            $('#titleModalLabel').text(isNew == true?"New row":"Update row");
+            var form = $('#modalRowDetail form');
+            form.empty();
             for (var i in tableDef.columns) {
-
-                $('#modalRowDetail form').append(
+                var cellValue = rowData[tableDef.columns[i].name];
+                cellValue = (cellValue === undefined) ? '' : cellValue;
+                form.append(
                     '<div class="form-group"><label for="'+tableDef.columns[i].name+'" class="col-form-label">' +
                     tableDef.columns[i].name +
-                    '</label><input type="text" class="form-control" name="'+tableDef.columns[i].name+'" value="'
-                    +rowData[tableDef.columns[i].name]+'"></div>');
+                    '</label><input type="text" class="form-control" name="'+tableDef.columns[i].name+'" value="' +
+                     cellValue +
+                    '" maxlength="' + tableDef.columns[i].size + '" ' + (tableDef.columns[i].nullable?'':'required') + '></div>');
             }
             
             $('#saveBtn').on('click', function () {
                 var url = (isNew == true?"c/":"u/") + tableDef.name;
-                $('#titleModalLabel').text(isNew == true?"New row":"Update row");
+                //$('#crudForm')[0].checkValidity()
                 $.post( url, $('#crudForm').serialize())
                     .done(function( postDoneData ) {
                         $('#alertMessage').html('Saved row ');
                         $('#successBox').show();
-                        $('#modalRowDetail').modal('hide')
+                        $('#modalRowDetail').modal('hide');
+                        datatableObj.ajax.reload();
                     });
+                // todo add error check and alert!!
             });
 
             dialog.modal();

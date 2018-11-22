@@ -23,8 +23,8 @@ public class CreateDataServlet extends CRUDServiceServlet {
             row.put(name, req.getParameter(name));
         }
         Object newKey = dbService.insertRow(table, row);
-        // check null!!
-        row.put(dbService.getColumnPK(table.getColumns()).getName(), newKey.toString());
+        if (newKey != null)
+            row.put(dbService.getColumnPK(table.getColumns()).getName(), newKey.toString());
         respondWithObject(resp, row);
 
     }
