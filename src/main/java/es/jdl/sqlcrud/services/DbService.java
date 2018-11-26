@@ -362,6 +362,8 @@ public class DbService {
     }
 
     private Object convertFromString(String value, ColumnDef col) {
+        if (value == null || "".equals(value))
+            return null;
         switch (JDBCType.valueOf(col.getType())) {
             case VARCHAR:
             case NVARCHAR:

@@ -12,3 +12,4 @@ CREATE TABLE FOURTH_TABLE (somekey integer primary key, one_attribute varchar(20
 
 CREATE TABLE FIFTH_TABLE (somekey integer primary key identity, one_attribute varchar(20) not null, snd_attrib date null);
 
+INSERT INTO FIFTH_TABLE (one_attribute) values ('attr_5_1'), ('attr_5_2'), ('attr_5_3');

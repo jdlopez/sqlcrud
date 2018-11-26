@@ -1,3 +1,10 @@
 {
-  "dataSourceName": "jdbc/mydatasource"
+  "dataSourceName": "jdbc/mydatasource",
+  "tables": [
+    { "name":  "FIRST_TABLE"},
+    { "name":  "SECOND_TABLE"},
+    { "name":  "THIRD_TABLE"},
+    { "name":  "FIFTH_TABLE"}
+  ],
+  "xxx": { "name":  "FOURTH_TABLE"}
 }
