@@ -12,8 +12,12 @@ public class DeleteDataServlet extends CRUDServiceServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TableDef table = dbService.getTable(ConfigHelper.getTableFromURL(req));
-        String key = ConfigHelper.getPrimaryKeyValue(req, table);
-        dbService.deleteByPK(table, key);
+        try {
+            TableDef table = dbService.getTable(ConfigHelper.getTableFromURL(req));
+            String key = ConfigHelper.getPrimaryKeyValue(req, table);
+            dbService.deleteByPK(table, key);
+        } catch (Exception e) {
+            super.sendException(resp, e);
+        }
     }
 }

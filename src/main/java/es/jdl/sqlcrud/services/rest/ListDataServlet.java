@@ -17,9 +17,13 @@ public class ListDataServlet extends CRUDServiceServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String t = ConfigHelper.getTableFromURL(req);
-        respondWithObject(resp,
-                new DataListResponse(dbService.getTable(t), dbService.selectFromTable(t, new SelectFilter(req)))
-        );
+        try {
+            String t = ConfigHelper.getTableFromURL(req);
+            respondWithObject(resp,
+                    new DataListResponse(dbService.getTable(t), dbService.selectFromTable(t, new SelectFilter(req)))
+            );
+        } catch (Exception e) {
+            super.sendException(resp, e);
+        }
     }
 }

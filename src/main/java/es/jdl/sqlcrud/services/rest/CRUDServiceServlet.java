@@ -30,4 +30,11 @@ public class CRUDServiceServlet extends HttpServlet {
         // if object is null then 404
         resp.getWriter().print(gson.toJson(o));
     }
+
+    protected void sendException(HttpServletResponse resp, Exception e) throws IOException {
+        resp.setContentType("application/json");
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        resp.getWriter().print(String.format("{\"error\": \"%s\"}", e.getMessage()));
+    }
+
 }

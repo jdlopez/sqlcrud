@@ -15,17 +15,21 @@ public class UpdateDataServlet extends CRUDServiceServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TableDef table = dbService.getTable(ConfigHelper.getTableFromURL(req));
-        String key = ConfigHelper.getPrimaryKeyValue(req, table);
+        try {
+            TableDef table = dbService.getTable(ConfigHelper.getTableFromURL(req));
+            String key = ConfigHelper.getPrimaryKeyValue(req, table);
 
-        Map<String, String> row = new HashMap<>();
-        for (Iterator<String> iter = req.getParameterNames().asIterator(); iter.hasNext(); ) {
-            String name = iter.next();
-            row.put(name, req.getParameter(name));
+            Map<String, String> row = new HashMap<>();
+            for (Iterator<String> iter = req.getParameterNames().asIterator(); iter.hasNext(); ) {
+                String name = iter.next();
+                row.put(name, req.getParameter(name));
+            }
+            dbService.updateRow(table, row);
+            // read again?
+            respondWithObject(resp, row);
+        } catch (Exception e) {
+            super.sendException(resp, e);
         }
-        dbService.updateRow(table, row);
-        // read again?
-        respondWithObject(resp, row);
 
     }
 }

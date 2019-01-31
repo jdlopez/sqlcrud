@@ -15,17 +15,21 @@ public class CreateDataServlet extends CRUDServiceServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TableDef table = dbService.getTable(ConfigHelper.getTableFromURL(req));
+        try {
+            TableDef table = dbService.getTable(ConfigHelper.getTableFromURL(req));
 
-        Map<String, String> row = new HashMap<>();
-        for (Iterator<String> iter = req.getParameterNames().asIterator(); iter.hasNext(); ) {
-            String name = iter.next();
-            row.put(name, req.getParameter(name));
+            Map<String, String> row = new HashMap<>();
+            for (Iterator<String> iter = req.getParameterNames().asIterator(); iter.hasNext(); ) {
+                String name = iter.next();
+                row.put(name, req.getParameter(name));
+            }
+            Object newKey = dbService.insertRow(table, row);
+            if (newKey != null)
+                row.put(dbService.getColumnPK(table.getColumns()).getName(), newKey.toString());
+            respondWithObject(resp, row);
+        } catch (Exception e) {
+            super.sendException(resp, e);
         }
-        Object newKey = dbService.insertRow(table, row);
-        if (newKey != null)
-            row.put(dbService.getColumnPK(table.getColumns()).getName(), newKey.toString());
-        respondWithObject(resp, row);
 
     }
 }
