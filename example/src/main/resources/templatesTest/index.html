@@ -142,7 +142,7 @@
                 var cellValue = rowData[tableDef.columns[i].name];
                 cellValue = (cellValue === undefined) ? '' : cellValue;
                 form.append(
-                    '<div class="form-group"><label for="'+tableDef.columns[i].name+'" class="col-form-label">' +
+                    '<div class="form-group"><label title="'+tableDef.columns[i].type+'" for="'+tableDef.columns[i].name+'" class="col-form-label">' +
                     tableDef.columns[i].name +
                     '</label><input type="text" class="form-control" name="'+tableDef.columns[i].name+'" value="' +
                      cellValue +
