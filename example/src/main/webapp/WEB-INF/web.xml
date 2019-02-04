@@ -51,6 +51,11 @@
         <servlet-name>QueryServlet</servlet-name>
         <servlet-class>es.jdl.sqlcrud.services.rest.QueryServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>ReportServlet</servlet-name>
+        <servlet-class>es.jdl.sqlcrud.services.rest.ReportServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ResourceServlet</servlet-name>
@@ -90,6 +95,11 @@
     <servlet-mapping>
         <servlet-name>QueryServlet</servlet-name>
         <url-pattern>/admin/query</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ReportServlet</servlet-name>
+        <url-pattern>/admin/report</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

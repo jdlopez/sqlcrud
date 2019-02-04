@@ -7,10 +7,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ReportServlet  extends CRUDServiceServlet {
+public class ReportServlet extends CRUDServiceServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            ReportService reportService = ReportService.getInstance(req.getServletContext());
+            respondWithObject(resp, reportService.getReportNames(req.getServletContext()));
+        } catch (Exception e) {
+            super.sendException(resp, e);
+        }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             ReportService reportService = ReportService.getInstance(req.getServletContext());
             String sql = reportService.getSQL(req.getParameter("report"), req.getServletContext());
@@ -21,7 +32,5 @@ public class ReportServlet  extends CRUDServiceServlet {
         } catch (Exception e) {
             super.sendException(resp, e);
         }
-
     }
-
 }

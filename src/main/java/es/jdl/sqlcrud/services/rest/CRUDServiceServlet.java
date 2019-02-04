@@ -7,6 +7,7 @@ import es.jdl.sqlcrud.services.ConfigHelper;
 import es.jdl.sqlcrud.services.DbService;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ public class CRUDServiceServlet extends HttpServlet {
     protected CRUDConfiguration config;
     protected DbService dbService;
     protected Gson gson;
+    private ServletContext ctx;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -23,6 +25,7 @@ public class CRUDServiceServlet extends HttpServlet {
         this.dbService = DbService.getInstance(config.getServletContext());
         gson = new GsonBuilder()
                 .setDateFormat(this.config.getDateFormatPattern()).create();
+        ctx = config.getServletContext();
     }
 
     protected void respondWithObject(HttpServletResponse resp, Object o) throws IOException {
@@ -32,6 +35,7 @@ public class CRUDServiceServlet extends HttpServlet {
     }
 
     protected void sendException(HttpServletResponse resp, Exception e) throws IOException {
+        ctx.log("Returning to client: " + e.getMessage(), e);
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         resp.getWriter().print(String.format("{\"error\": \"%s\"}", e.getMessage()));

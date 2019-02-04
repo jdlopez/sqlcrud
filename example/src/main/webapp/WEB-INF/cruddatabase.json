@@ -3,7 +3,7 @@
   "applicationName": "Example app HSQL",
   "applicationHome": "/",
   "queryService": "true",
-  "xxreportSource": "table:select ",
+  "reportSource": "table:SQL_REPORT",
   "tables": [
     { "name": "FIRST_TABLE"},
     { "name": "SECOND_TABLE"},

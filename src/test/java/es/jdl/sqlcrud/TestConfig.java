@@ -17,4 +17,8 @@ public class TestConfig {
         Assertions.assertNotNull(conf);
 
     }
+
+    public void testTableConfig() {
+
+    }
 }

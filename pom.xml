@@ -6,7 +6,7 @@
 
     <groupId>io.github.jdlopez</groupId>
     <artifactId>sqlcrud</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <name>SQL CRUD servlet app</name>
     <description>CRUD actions and view for java-servlet apps</description>
@@ -63,6 +63,9 @@
                     <url>${jdbc.url}</url>
                     <username>${jdbc.user}</username>
                     <password>${jdbc.password}</password>
+                    <srcFiles>
+                        <srcFile>${basedir}/src/test/resources/createdb.sql</srcFile>
+                    </srcFiles>
                 </configuration>
                 <!--
                 <executions>
@@ -87,7 +90,6 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>deploy</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -104,7 +106,6 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
-                        <phase>deploy</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -129,7 +130,7 @@
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
-                        <phase>deploy</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
