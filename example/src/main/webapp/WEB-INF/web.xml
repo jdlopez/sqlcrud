@@ -41,6 +41,16 @@
         <servlet-name>CreateDataServlet</servlet-name>
         <servlet-class>es.jdl.sqlcrud.services.rest.CreateDataServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>AppInfoServlet</servlet-name>
+        <servlet-class>es.jdl.sqlcrud.services.rest.AppInfoServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>QueryServlet</servlet-name>
+        <servlet-class>es.jdl.sqlcrud.services.rest.QueryServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ResourceServlet</servlet-name>
@@ -75,6 +85,16 @@
     <servlet-mapping>
         <servlet-name>CreateDataServlet</servlet-name>
         <url-pattern>/admin/c/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>QueryServlet</servlet-name>
+        <url-pattern>/admin/query</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AppInfoServlet</servlet-name>
+        <url-pattern>/admin/info</url-pattern>
     </servlet-mapping>
     
     <listener>

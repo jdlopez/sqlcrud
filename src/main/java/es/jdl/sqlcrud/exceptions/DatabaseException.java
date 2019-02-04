@@ -3,8 +3,8 @@ package es.jdl.sqlcrud.exceptions;
 import javax.servlet.ServletException;
 
 /**
- * Database exceptions
- * <br/>Extends servletexception to match servlet-rest sservice architecture
+ * <p>Database exceptions</p>
+ * <p>Extends servletexception to match servlet-rest sservice architecture</p>
  * @author jdlopez
  */
 public class DatabaseException extends ServletException {

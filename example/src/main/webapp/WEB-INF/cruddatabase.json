@@ -1,5 +1,6 @@
 {
   "dataSourceName": "jdbc/mydatasource",
+  "applicationName": "Example app HSQL",
   "tables": [
     { "name":  "FIRST_TABLE"},
     { "name":  "SECOND_TABLE"},

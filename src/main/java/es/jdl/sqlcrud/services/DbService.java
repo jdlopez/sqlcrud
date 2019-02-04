@@ -1,5 +1,6 @@
 package es.jdl.sqlcrud.services;
 
+import es.jdl.sqlcrud.domain.DataListResponse;
 import es.jdl.sqlcrud.domain.SelectFilter;
 import es.jdl.sqlcrud.domain.config.CRUDConfiguration;
 import es.jdl.sqlcrud.domain.def.ColumnDef;
@@ -21,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -386,6 +388,44 @@ public class DbService {
         return value;
     }
 
+    public DataListResponse selectFromQuery(String sql) throws DatabaseException {
+        List<Map<String, Object>> ret = new LinkedList<>();
+        String[] columnNames = null;
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                if (columnNames == null)
+                    columnNames = readColumnNames(rs);
+                ret.add(resultSetToMap(rs, columnNames));
+            } // end while
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Executing select: " + sql + ". " + e.getMessage(), e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new DatabaseException("Closing db connection: " + conn + ". " + e.getMessage(), e);
+                }
+            } // conn <> null
+        }
+
+        TableDef fakeTable = new TableDef();
+        List<ColumnDef> columns = new ArrayList<>();
+        for (String c: columnNames) {
+            ColumnDef cd = new ColumnDef();
+            cd.setName(c);
+            columns.add(cd);
+        }
+        fakeTable.setColumns(columns);
+        return new DataListResponse(fakeTable, ret);
+    }
     // getters and setters
 
     public Collection<TableDef> getAllTables() {
@@ -399,4 +439,5 @@ public class DbService {
     public List<String> getCatalogs() {
         return catalogs;
     }
+
 }

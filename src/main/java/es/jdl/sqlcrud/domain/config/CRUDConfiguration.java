@@ -14,6 +14,9 @@ public class CRUDConfiguration {
     private List<TableDef> tables;
     private AutoDiscoveryConfig autoDiscovery;
     private String dateFormatPattern = "dd/MM/yyyy";
+    private String applicationName;
+    private boolean queryService = false;
+    private String reportSource;
 
     public String getDataSourceName() {
         return dataSourceName;
@@ -45,5 +48,29 @@ public class CRUDConfiguration {
 
     public void setDateFormatPattern(String dateFormatPattern) {
         this.dateFormatPattern = dateFormatPattern;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public boolean isQueryService() {
+        return queryService;
+    }
+
+    public void setQueryService(boolean queryService) {
+        this.queryService = queryService;
+    }
+
+    public String getReportSource() {
+        return reportSource;
+    }
+
+    public void setReportSource(String reportSource) {
+        this.reportSource = reportSource;
     }
 }

@@ -18,7 +18,7 @@
 
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><div id="appname">Company name</div></a>
     </nav>
 
     <div class="modal fade" id="modalRowDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -31,12 +31,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="crudForm" class="needs-validation" novalidate>
+                    <form id="crudForm" class="needs-validation" >
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
                 </div>
             </div>
         </div>
@@ -54,6 +54,12 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="alert alert-success alert-dismissible fade show" role="alert" style="display:none;" id="successBox">
                 <div id="alertMessage"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-error alert-dismissible fade show" role="alert" style="display:none;" id="errorBox">
+                <div id="errorMessage"></div>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -90,13 +96,17 @@
 
             var ul = $( "#tableList" );
             $.getJSON( "def/all", function( data ) {
-                console.log(data);
                 $.each(data, function(i, f) {
                     ul.append('<li class="nav-item"><a class="nav-link" href="#" onclick="loadTableData(\'' + f.name + '\')"><span data-feather="file"></span>' + f.name + '</a></li>')
                 });
 
                 // load icons
                 feather.replace()
+            });
+
+            $.getJSON( "info", function( data ) {
+                document.getElementById( 'appname' ).innerHTML
+                    .replace(data.applicationName);
             });
 
         });
@@ -133,6 +143,9 @@
             });
         }
 
+        var isNewRow = false;
+        var tableDefActual;
+
         function showRowForm(tableDef, rowData, isNew) {
             var dialog = $('#modalRowDetail');
             $('#titleModalLabel').text(isNew == true?"New row":"Update row");
@@ -141,30 +154,69 @@
             for (var i in tableDef.columns) {
                 var cellValue = rowData[tableDef.columns[i].name];
                 cellValue = (cellValue === undefined) ? '' : cellValue;
-                form.append(
-                    '<div class="form-group"><label title="'+tableDef.columns[i].type+'" for="'+tableDef.columns[i].name+'" class="col-form-label">' +
-                    tableDef.columns[i].name +
-                    '</label><input type="text" class="form-control" name="'+tableDef.columns[i].name+'" value="' +
-                     cellValue +
-                    '" maxlength="' + tableDef.columns[i].size + '" ' + (tableDef.columns[i].nullable?'':'required') + '></div>');
+                // Replace with some fancy printField function :-/
+                form.append(printField(tableDef.columns[i], cellValue));
             }
-            
-            $('#saveBtn').on('click', function () {
-                var url = (isNew == true?"c/":"u/") + tableDef.name;
-                //$('#crudForm')[0].checkValidity()
-                $.post( url, $('#crudForm').serialize())
-                    .done(function( postDoneData ) {
-                        $('#alertMessage').html('Saved row ');
-                        $('#successBox').show();
-                        $('#modalRowDetail').modal('hide');
-                        datatableObj.ajax.reload();
-                    });
-                // todo add error check and alert!!
-            });
+            isNewRow = isNew;
+            tableDefActual = tableDef;
 
             dialog.modal();
         }
 
+        $('#saveBtn').on('click', function () {
+            var url = (isNewRow == true?"c/":"u/") + tableDefActual.name;
+            //$('#crudForm')[0].checkValidity()
+            $.post( url, $('#crudForm').serialize(), function( postDoneData ) {
+                    $('#alertMessage').html('Saved row ');
+                    $('#successBox').show();
+                    $('#modalRowDetail').modal('hide');
+                    datatableObj.ajax.reload();
+                })
+                .fail(function (jqXHR, textStatus) {
+                    showError(jqXHR.responseText);
+                });
+            return false;
+        });
+
+        function showError(messsage) {
+            $('#errorMessage').html(messsage);
+            $('#errorBox').show();
+        }
+
+        /*
+        <div id="mytemplate">
+          <p>%test%</p>
+          <p>%word%</p>
+        </div>
+        Example of call:
+
+        document.getElementById("my").innerHTML=template("mytemplate",{test:"MYTEST",word:"MYWORD"});
+         */
+        function template( templateid, data ){
+            return document.getElementById( templateid ).innerHTML
+                .replace(
+                    /%(\w*)%/g, // or /{(\w*)}/g for "{this} instead of %this%"
+                    function( m, key ){
+                        return data.hasOwnProperty( key ) ? data[ key ] : "";
+                    }
+                );
+        }
+
+        function printField(columnDef, cellValue) {
+            return template("fieldTemplate", {type: columnDef.type, name: columnDef.name,
+                required: columnDef.nullable?"":"required", readonly: columnDef.autoIncrement?"readonly":"",
+                size: columnDef.size, formathint: (columnDef.type.toUpperCase().indexOf("DATE") !== -1)?" DD/MM/YYYY ":"", value: cellValue})
+        }
+
     </script>
+    <div aria-hidden="true" id="fieldTemplate">
+        <div class="form-group">
+            <label title="%type%" for="%name%" class="col-form-label">
+            %name% %formathint%
+            </label>
+            <input type="text" class="form-control" name="%name%" value="%value%" maxlength="%size%" %required% %readonly% >
+        </div>
+    </div>
+
   </body>
 </html>
