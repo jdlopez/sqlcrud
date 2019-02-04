@@ -18,7 +18,7 @@
 
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><div id="appname">Company name</div></a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" id="home">CRUD</a>
     </nav>
 
     <div class="modal fade" id="modalRowDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -48,6 +48,8 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column" id="tableList">
             </ul>
+              <ul class="nav flex-column" id="tools">
+              </ul>
           </div>
         </nav>
 
@@ -94,19 +96,28 @@
     <script>
         $( document ).ready(function() {
 
-            var ul = $( "#tableList" );
-            $.getJSON( "def/all", function( data ) {
-                $.each(data, function(i, f) {
-                    ul.append('<li class="nav-item"><a class="nav-link" href="#" onclick="loadTableData(\'' + f.name + '\')"><span data-feather="file"></span>' + f.name + '</a></li>')
-                });
 
-                // load icons
-                feather.replace()
-            });
+            var ul = $( "#tableList" );
 
             $.getJSON( "info", function( data ) {
-                document.getElementById( 'appname' ).innerHTML
-                    .replace(data.applicationName);
+                var home = document.getElementById("home");
+                if (data.applicationHome != null)
+                    home.url = data.applicationHome;
+                home.innerText = data.applicationName;
+
+                var tools = $( "#tools" );
+                if (data.query != null)
+                    tools.append('<li class="nav-item"><a class="nav-link" href="query.html"><span data-feather="file-text"> </span> Query</a></li>');
+                if (data.report != null)
+                    tools.append('<li class="nav-item"><a class="nav-link" href="report.html"><span data-feather="list"> </span> Reports</a></li>');
+                $.getJSON( "def/all", function( data ) {
+                    $.each(data, function(i, f) {
+                        ul.append('<li class="nav-item"><a class="nav-link" href="#" onclick="loadTableData(\'' + f.name + '\')"><span data-feather="file"></span>' + f.name + '</a></li>')
+                    });
+
+                    // load icons
+                    feather.replace()
+                });
             });
 
         });

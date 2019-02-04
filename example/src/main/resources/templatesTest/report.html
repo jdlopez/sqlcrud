@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SQL CRUD Application</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- data tables -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" id="home">CRUD</a>
+</nav>
+
+<div class="modal fade" id="modalRowDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModalLabel">Row detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="crudForm" class="needs-validation" >
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column" id="tableList">
+                </ul>
+                <ul class="nav flex-column" id="tools">
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display:none;" id="successBox">
+                <div id="alertMessage"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-error alert-dismissible fade show" role="alert" style="display:none;" id="errorBox">
+                <div id="errorMessage"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" id="tableTitle"></h1>
+            </div>
+
+            <!-- here table name? <h2>Section title</h2> -->
+            <div class="table-responsive">
+
+                <table class="table table-striped table-sm" id="dataTable">
+                </table>
+
+                <button id="btnNew" class="btn btn-primary" style="display:none;" >New</button>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    $( document ).ready(function() {
+
+
+        var ul = $( "#tableList" );
+
+        $.getJSON( "info", function( data ) {
+            var home = document.getElementById("home");
+            if (data.applicationHome != null)
+                home.url = data.applicationHome;
+            home.innerText = data.applicationName;
+
+            var tools = $( "#tools" );
+            if (data.query != null)
+                tools.append('<li class="nav-item"><a class="nav-link" href="query.html"><span data-feather="file-text"> Query</span></a></li>');
+            if (data.report != null)
+                tools.append('<li class="nav-item"><a class="nav-link" href="report.html"><span data-feather="list"> Reports</span></a></li>');
+        });
+
+        $.getJSON( "def/all", function( data ) {
+            $.each(data, function(i, f) {
+                ul.append('<li class="nav-item"><a class="nav-link" href="#" onclick="loadTableData(\'' + f.name + '\')"><span data-feather="file"></span>' + f.name + '</a></li>')
+            });
+
+            // load icons
+            feather.replace()
+        });
+    });
+
+    var datatableObj;
+
+    function loadTableData(tableName) {
+        $.getJSON( "def/" + tableName, function( tableDef ) {
+            // sets title
+            $('#tableTitle').text(tableDef.name);
+            var columns = [];
+            for (var i in tableDef.columns) {
+                columns.push({data: tableDef.columns[i].name, title: tableDef.columns[i].name, defaultContent:''});
+            }
+            columns.push({targets: -1,data: null,defaultContent: "<button>Edit</button>"});
+            console.log(columns);
+            datatableObj = $('#dataTable').DataTable({
+                "ajax":   "l/" + tableName,
+                "columns": columns,
+                "bDestroy": true
+            });
+
+            $('#btnNew').show();
+
+            $('#dataTable tbody').on( 'click', 'button', function () {
+                var data = datatableObj.row( $(this).parents('tr') ).data();
+                showRowForm(tableDef, data, false);
+            } );
+
+            $('#btnNew').on('click', function () {
+                showRowForm(tableDef, {}, true);
+            });
+
+        });
+    }
+
+    var isNewRow = false;
+    var tableDefActual;
+
+    function showRowForm(tableDef, rowData, isNew) {
+        var dialog = $('#modalRowDetail');
+        $('#titleModalLabel').text(isNew == true?"New row":"Update row");
+        var form = $('#modalRowDetail form');
+        form.empty();
+        for (var i in tableDef.columns) {
+            var cellValue = rowData[tableDef.columns[i].name];
+            cellValue = (cellValue === undefined) ? '' : cellValue;
+            // Replace with some fancy printField function :-/
+            form.append(printField(tableDef.columns[i], cellValue));
+        }
+        isNewRow = isNew;
+        tableDefActual = tableDef;
+
+        dialog.modal();
+    }
+
+    $('#saveBtn').on('click', function () {
+        var url = (isNewRow == true?"c/":"u/") + tableDefActual.name;
+        //$('#crudForm')[0].checkValidity()
+        $.post( url, $('#crudForm').serialize(), function( postDoneData ) {
+            $('#alertMessage').html('Saved row ');
+            $('#successBox').show();
+            $('#modalRowDetail').modal('hide');
+            datatableObj.ajax.reload();
+        })
+            .fail(function (jqXHR, textStatus) {
+                showError(jqXHR.responseText);
+            });
+        return false;
+    });
+
+    function showError(messsage) {
+        $('#errorMessage').html(messsage);
+        $('#errorBox').show();
+    }
+
+    /*
+    <div id="mytemplate">
+      <p>%test%</p>
+      <p>%word%</p>
+    </div>
+    Example of call:
+
+    document.getElementById("my").innerHTML=template("mytemplate",{test:"MYTEST",word:"MYWORD"});
+     */
+    function template( templateid, data ){
+        return document.getElementById( templateid ).innerHTML
+            .replace(
+                /%(\w*)%/g, // or /{(\w*)}/g for "{this} instead of %this%"
+                function( m, key ){
+                    return data.hasOwnProperty( key ) ? data[ key ] : "";
+                }
+            );
+    }
+
+    function printField(columnDef, cellValue) {
+        return template("fieldTemplate", {type: columnDef.type, name: columnDef.name,
+            required: columnDef.nullable?"":"required", readonly: columnDef.autoIncrement?"readonly":"",
+            size: columnDef.size, formathint: (columnDef.type.toUpperCase().indexOf("DATE") !== -1)?" DD/MM/YYYY ":"", value: cellValue})
+    }
+
+</script>
+<div aria-hidden="true" id="fieldTemplate">
+    <div class="form-group">
+        <label title="%type%" for="%name%" class="col-form-label">
+            %name% %formathint%
+        </label>
+        <input type="text" class="form-control" name="%name%" value="%value%" maxlength="%size%" %required% %readonly% >
+    </div>
+</div>
+
+</body>
+</html>

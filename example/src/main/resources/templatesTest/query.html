@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SQL CRUD Application</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- data tables -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" id="home">CRUD</a> Query
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column" id="tableList">
+                    <li class="nav-item"><a class="nav-link" href="index.html"><span data-feather="house"> Home</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display:none;" id="successBox">
+                <div id="alertMessage"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-error alert-dismissible fade show" role="alert" style="display:none;" id="errorBox">
+                <div id="errorMessage"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div>
+                <form id="formSQL">
+                <div class="form-group">
+                    <label title="%type%" for="querySQL" class="col-form-label">
+                        SQL Statement:
+                    </label>
+                    <textarea id="querySQL" name="sql" class="form-control"></textarea>
+                </div>
+                <button onclick="return false;" type="submit" class="btn btn-primary" id="executeQuery">Execute</button>
+                </form>
+            </div>
+            <hr/>
+            <div class="table-responsive">
+
+                <table class="table table-striped table-sm" id="dataTable">
+                </table>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    $( document ).ready(function() {
+        $('#executeQuery').on('click', function () {
+            $.post( "query", $('#formSQL').serialize(), function( data ) {
+                var columns = [];
+                for (var i in data.table.columns) {
+                    columns.push({data: data.table.columns[i].name, title: data.table.columns[i].name, defaultContent:''});
+                }
+
+                datatableObj = $('#dataTable').DataTable({
+                    "data": data.data,
+                    "columns": columns,
+                    "bDestroy": true
+                });
+            })
+            .fail(function (jqXHR, textStatus) {
+                showError(jqXHR.responseText);
+            });
+
+            return false;
+        });
+
+    });
+
+    function showError(messsage) {
+        $('#errorMessage').html(messsage);
+        $('#errorBox').show();
+    }
+
+
+</script>
+
+</body>
+</html>

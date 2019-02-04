@@ -1,11 +1,14 @@
 {
   "dataSourceName": "jdbc/mydatasource",
   "applicationName": "Example app HSQL",
+  "applicationHome": "/",
+  "queryService": "true",
+  "xxreportSource": "table:select ",
   "tables": [
-    { "name":  "FIRST_TABLE"},
-    { "name":  "SECOND_TABLE"},
-    { "name":  "THIRD_TABLE"},
-    { "name":  "FIFTH_TABLE"}
+    { "name": "FIRST_TABLE"},
+    { "name": "SECOND_TABLE"},
+    { "name": "THIRD_TABLE"},
+    { "name": "FIFTH_TABLE"}
   ],
   "xxx": { "name":  "FOURTH_TABLE"}
 }

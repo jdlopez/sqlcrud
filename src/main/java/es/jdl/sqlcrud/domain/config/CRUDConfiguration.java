@@ -2,7 +2,9 @@ package es.jdl.sqlcrud.domain.config;
 
 import es.jdl.sqlcrud.domain.def.TableDef;
 
+import java.beans.Transient;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -15,6 +17,7 @@ public class CRUDConfiguration {
     private AutoDiscoveryConfig autoDiscovery;
     private String dateFormatPattern = "dd/MM/yyyy";
     private String applicationName;
+    private String applicationHome;
     private boolean queryService = false;
     private String reportSource;
 
@@ -72,5 +75,13 @@ public class CRUDConfiguration {
 
     public void setReportSource(String reportSource) {
         this.reportSource = reportSource;
+    }
+
+    public String getApplicationHome() {
+        return applicationHome;
+    }
+
+    public void setApplicationHome(String applicationHome) {
+        this.applicationHome = applicationHome;
     }
 }

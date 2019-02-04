@@ -12,6 +12,7 @@ public class AppInfoServlet extends CRUDServiceServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         respondWithObject(resp, Map.of(
                 "applicationName", super.config.getApplicationName() != null?super.config.getApplicationName():"CRUD App",
+                "applicationHome", super.config.getApplicationHome(),
                 "query", super.config.isQueryService(),
                 "report", super.config.getReportSource() != null
         ));
