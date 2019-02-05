@@ -6,7 +6,7 @@
 
     <groupId>io.github.jdlopez</groupId>
     <artifactId>sqlcrud</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 
     <name>SQL CRUD servlet app</name>
     <description>CRUD actions and view for java-servlet apps</description>
