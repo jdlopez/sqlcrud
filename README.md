@@ -1,3 +1,5 @@
+[![Maven](https://img.shields.io/maven-central/v/io.github.jdlopez/sqlcrud.svg)](https://mvnrepository.com/artifact/io.github.jdlopez/sqlcrud)
+
 # SQL CRUD
 
 Very simple CRUD application. Servlet based, jar packaged. Could be embedded in larger applications
@@ -8,6 +10,25 @@ Very simple CRUD application. Servlet based, jar packaged. Could be embedded in 
 * D Delete
 
 [CRUD wikipedia](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+
+_Features:_
+
+* Pre-build bootstrap-style application (very simple but fully functional)
+* All CRUD operations available + listing. Select table then show table content listings. Edit or create rows
+* Custom Query window. Could be disabeled
+* Reports window. Configurable: sqls in database table or properties. Could be disableled
+
+## Basic usage
+
+Add maven dependency:
+
+    <dependency>
+        <groupId>io.github.jdlopez</groupId>
+        <artifactId>sqlcrud</artifactId>
+        <version>${see-last-version-in-badge}</version>
+    </dependency>
+
+Add config: web.xml (actions) and cruddatabase.json
 
 ## Config
 
@@ -24,38 +45,10 @@ Example web.xml:
 Example json:
 
 [cruddatabase.json in example](example/src/webapp/WEB-INF/cruddatabase.json)
-    
-## Arch
 
-servlet + html5/js
+## Building
 
-Services, REST. All refered to 'base URI':
-
-- [x] GET /base/ displays html frontend
-- [x] GET /base/def/all get available tables
-- [x] GET /base/def/table get json with table definition
-
-- [x] GET /base/l/table list all data, using body json as filter
-- [x] POST /base/c/table with json data
-- [x] GET  /base/r/table/id
-- [x] POST /base/u/table with json data
-- [x] DELETE /base/d/table/id
-
-- [x] add some cache for definitions (DbService.getInstance)
-
-### Json parser
-
-1st trying JSR 374: [jee jsonp](https://javaee.github.io/jsonp/) -> no read javabean or write
-
-Actually it uses Gson. Is lighter than Jackson
-
-## frontend
-
-bootstrap+jquery+datatables all in CDN
-
-Fully customizable (replace for all templates)
-
-## building
+If you want to build your own jar library:
 
 In base project:
 
@@ -65,6 +58,6 @@ To create sample database:
 
     mvn sql:execute
     
-In example project:
+In example project to test:
 
     mvn jetty:run
